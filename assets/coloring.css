@@ -1,0 +1,88 @@
+body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+    }
+
+    svg {
+      max-width: 90%;
+      border: 2px solid #333;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #2196f3;
+      color: white;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    .pcr-button {
+        width: 4em !important;
+        height: 4em !important;
+        margin: 10px;
+        outline: 5px solid rgb(255, 255, 255);
+    }
+
+    .btn:hover {
+      background-color: #0b7dda;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 0.3fr 0.3fr 2.4fr;
+      grid-template-rows: 0.2fr 0.2fr 2.7fr;
+      grid-template-areas:
+        "img_menu img_menu img_menu"
+        "fill_sample picker picker"
+        "fills img_wrapper img_wrapper";
+    }
+
+    .img_menu    { grid-area: img_menu;    background-color: #f8b195; }
+
+    .fills {
+    grid-area: fills;
+    background-color: #f67280;
+    padding: 5px;
+    }
+
+    .fills-inner {
+        max-height: 425px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        place-items: center;
+        border: 2px solid #ffffff;
+    }
+
+    .fills-inner svg {
+    display: block;
+    }
+
+    .fill_sample { grid-area: fill_sample; background-color: #c06c84; align-content: center;}
+    .img_wrapper { grid-area: img_wrapper; background-color: #6c5b7b; }
+    .picker      { grid-area: picker;      background-color: #355c7d; padding: 10px; }
+
+    #pickr-container {
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .color {
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      margin: 2px;
+      border: 1px solid #000;
+      cursor: pointer;
+    }
+    
+    .preview-shape {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #fff;
+      place-self: center;
+    }

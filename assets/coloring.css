@@ -1,82 +1,18 @@
-body {
-  font-family: sans-serif;
-  text-align: center;
-  background: #f0f8ff;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #2196f3;
-  color: white;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #0b7dda;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: 0.3fr 0.3fr 2.4fr;
-  grid-template-rows: 0.1fr 0.2fr 2.8fr;
-  grid-template-areas:
-    "img_menu img_menu img_menu"
-    "fill_sample picker picker"
-    "fills img_wrapper img_wrapper";
-}
-
-.img_menu    { grid-area: img_menu;    background-color: #f8b195; }
-.fills       { grid-area: fills; background-color: #f67280; padding: 5px; }
-.fill_sample { grid-area: fill_sample; background-color: #c06c84; align-content: center;}
-.img_wrapper { grid-area: img_wrapper; background-color: #6c5b7b; }
-.picker      { grid-area: picker; background-color: #355c7d; padding: 10px; }
-
-.pcr-button {
-  width: 4em !important;
-  height: 4em !important;
-  margin: 10px;
-  outline: 5px solid #ffffff;
-}
-
-.fills-inner {
-  max-height: 425px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none;
-  place-items: center;
-}
-
-.fills-inner svg {
-  display: block;
-}
-
-.color {
-  width: 30px;
-  height: 30px;
-  display: inline-block;
-  margin: 2px;
-  border: 1px solid #000;
-  cursor: pointer;
-}
-
-.preview-shape {
-  width: 80px;
-  place-self: center;
-}
-
-.patternSample {
-  stroke: #fff;
-  stroke-width: 2;
-  cursor: pointer;
-}
-
-.patternSample:hover {
-  stroke: black;
-}
-
-#fillPreview svg {
-  border: 2px solid #ffffff;
-}
+    body { font-family: Arial, sans-serif; display: flex; height: 100vh; margin: 0; }
+    #sidebar { width: 300px; padding: 20px; border-right: 1px solid #ccc; overflow-y: auto; box-sizing: border-box; }
+    #viewer { flex: 1; position: relative; overflow: hidden; }
+    #svgContainer { width: 100%; height: 100%; transform-origin: center center; }
+    .mode-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
+    .mode-button { width: 40px; height: 40px; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .mode-button.selected { border-color: #000; }
+    .control-group { margin-bottom: 15px; }
+    .hovered { opacity: 0.7; cursor: pointer; }
+    #zoomControls { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.8); padding: 5px; border-radius: 5px; z-index: 10; }
+    #zoomControls button { width: auto; margin: 0 2px; }
+    .palette-buttons, .pattern-buttons, .gradient-buttons { display: flex; gap: 5px; margin-bottom: 10px; }
+    .palette-button, .pattern-button, .gradient-button { flex: 1; height: 30px; cursor: pointer; border: 1px solid #ccc; }
+    .palette-button.selected, .pattern-button.selected, .gradient-button.selected { border-color: #000; }
+    .swatch-container { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+    .swatch { width: 24px; height: 24px; cursor: pointer; border: 1px solid #ccc; }
+    .swatch.selected { border-color: #000; }
+    label.range-label { margin-top: 10px; display: block; }

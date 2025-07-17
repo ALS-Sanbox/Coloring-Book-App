@@ -1,209 +1,173 @@
 window.onload = () => {
-  const swatchesContainer = document.getElementById("swatchesContainer");
-  const colorThemeBtn = document.getElementById("colorThemeBtn");
-  const fillPreviewRect = document.getElementById("fillPreviewRect");
-  const svgDefs = document.querySelector('svg defs'); // get defs container to update gradients
+  let gradCounter = 0;
+    let zoomScale = 1;
+    const palettes = {
+      base: ["#ffffff","#000000","#f44336","#e91e63","#9c27b0","#673ab7","#3f51b5","#2196f3","#03a9f4","#00bcd4","#009688","#4caf50","#8bc34a","#cddc39","#ffeb3b","#ffc107","#ff9800","#ff5722","#795548","#607d8b"],
+      grayscale: ["#000000","#333333","#666666","#999999","#CCCCCC","#FFFFFF"],
+      brights: ["#FFEB3B","#FFC107","#FF9800","#FF5722","#E91E63","#9C27B0","#673AB7","#3F51B5"]
+    };
+    let currentPalette = 'base', currentMode = 'solid', svgDoc = null;
 
-  const themes = {
-    base: [
-      "#ffffff", "#000000", "#f44336", "#e91e63", "#9c27b0", "#673ab7",
-      "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50",
-      "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722",
-      "#795548", "#607d8b"
-    ]
-  };
-
-  const themeOrder = Object.keys(themes);
-  let currentThemeIndex = 0;
-
-  // Track two colors for gradients
-  let selectedColor1 = "#f44c4e"; // default gradient start color
-  let selectedColor2 = "#febf4d"; // default gradient stop color
-
-  // Current fill selection (solid color string or gradient/pattern id)
-  let selectedFill = selectedColor1;
-
-  // Update the fill preview rect based on current selectedFill or colors
-  function updateFillPreview(fill) {
-    if (fill.startsWith("gradient_") || fill.startsWith("pattern_")) {
-      fillPreviewRect.setAttribute("fill", `url(#${fill})`);
-    } else if (fill.startsWith("url(")) {
-      fillPreviewRect.setAttribute("fill", fill);
-    } else {
-      fillPreviewRect.setAttribute("fill", fill);
-    }
-  }
-
-  // Update gradient stops dynamically
-  function updateGradientColors(id, color1, color2) {
-    const grad = document.getElementById(id);
-    if (!grad) return;
-
-    const stops = grad.querySelectorAll('stop');
-    if (stops.length >= 2) {
-      stops[0].setAttribute('stop-color', color1);
-      stops[1].setAttribute('stop-color', color2);
-    }
-  }
-
-  // Initialize first Pickr (for first gradient color or solid color)
-  const pickr1 = Pickr.create({
-    el: '#pickr-container',
-    theme: 'classic',
-    default: selectedColor1,
-    swatches: themes.base,
-    components: {
-      preview: true,
-      opacity: false,
-      hue: true,
-      interaction: { hex: true, input: true, save: true }
-    }
-  });
-
-  // Initialize second Pickr (for second gradient color)
-  const pickr2 = Pickr.create({
-    el: '#pickr-container-2',
-    theme: 'classic',
-    default: selectedColor2,
-    swatches: themes.base,
-    components: {
-      preview: true,
-      opacity: false,
-      hue: true,
-      interaction: { hex: true, input: true, save: true }
-    }
-  });
-
-  // On color1 change/save
-pickr1.on('change', (color) => {
-  selectedColor1 = color.toHEXA().toString();
-
-  if (selectedFill.startsWith("gradient_")) {
-    updateGradientColors(selectedFill, selectedColor1, selectedColor2);
-    updateFillPreview(selectedFill);
-  } else if (selectedFill.startsWith("pattern_")) {
-    updatePatternColors(selectedFill, selectedColor1, selectedColor2);
-    updateFillPreview(selectedFill);
-  } else {
-    selectedFill = selectedColor1;
-    updateFillPreview(selectedFill);
-  }
-});
-
-  pickr1.on('save', () => pickr1.hide());
-
-  // On color2 change/save
-pickr2.on('change', (color) => {
-  selectedColor2 = color.toHEXA().toString();
-
-  if (selectedFill.startsWith("gradient_")) {
-    updateGradientColors(selectedFill, selectedColor1, selectedColor2);
-    updateFillPreview(selectedFill);
-  } else if (selectedFill.startsWith("pattern_")) {
-    updatePatternColors(selectedFill, selectedColor1, selectedColor2);
-    updateFillPreview(selectedFill);
-  }
-});
-
-  pickr2.on('save', () => pickr2.hide());
-
-  function renderSwatches(colors) {
-    swatchesContainer.innerHTML = '';
-    colors.forEach(color => {
-      const swatch = document.createElement('div');
-      swatch.className = 'color';
-      swatch.style.backgroundColor = color;
-      swatch.addEventListener('click', () => {
-        selectedFill = color;
-        selectedColor1 = color;
-        pickr1.setColor(color);
-        updateFillPreview(selectedFill);
+    // Palette Buttons
+    document.querySelectorAll('.palette-button').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.palette-button').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      currentPalette = btn.dataset.palette;
+      renderSwatches();
+    }));
+    document.querySelector('.palette-button[data-palette="base"]').classList.add('selected');
+    function renderSwatches() {
+      const container = document.getElementById('swatchContainer');
+      container.innerHTML = '';
+      palettes[currentPalette].forEach(col => {
+        const sw = document.createElement('div');
+        sw.className = 'swatch';
+        sw.style.background = col;
+        sw.addEventListener('click', () => {
+          document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+          sw.classList.add('selected');
+          document.getElementById('colorSolid').value = col;
+        });
+        container.appendChild(sw);
       });
-      swatchesContainer.appendChild(swatch);
+    }
+    renderSwatches();
+
+    // Mode Buttons
+    document.querySelectorAll('.mode-button').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-button').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      currentMode = btn.dataset.mode;
+      document.getElementById('solidControls').style.display = currentMode === 'solid' ? 'block' : 'none';
+      document.getElementById('gradientControls').style.display = currentMode === 'gradient' ? 'block' : 'none';
+      document.getElementById('patternControls').style.display = currentMode === 'pattern' ? 'block' : 'none';
+      initializeGradient();
+      updatePatternPreviews();
+    }));
+    document.getElementById('modeSolid').classList.add('selected');
+
+    // Gradient Previews & Selection
+    const gradBtns = document.querySelectorAll('.gradient-button');
+    function updateGradientPreviews() {
+      const c1 = document.getElementById('colorGrad1').value;
+      const c2 = document.getElementById('colorGrad2').value;
+      gradBtns.forEach(btn => {
+        if (btn.dataset.type === 'linear') {
+          btn.style.background = `linear-gradient(${btn.dataset.angle}deg, ${c1}, ${c2})`;
+        } else {
+          btn.style.background = `radial-gradient(circle, ${c1}, ${c2})`;
+        }
+      });
+    }
+    function initializeGradient() {
+      updateGradientPreviews();
+      // select first preset by default
+      gradBtns.forEach(b => b.classList.remove('selected'));
+      const first = gradBtns[0];
+      first.classList.add('selected');
+      window.selGrad = {
+        type: first.dataset.type,
+        c1: document.getElementById('colorGrad1').value,
+        c2: document.getElementById('colorGrad2').value,
+        angle: first.dataset.angle
+      };
+    }
+    document.getElementById('colorGrad1').addEventListener('input', updateGradientPreviews);
+    document.getElementById('colorGrad2').addEventListener('input', updateGradientPreviews);
+    gradBtns.forEach(btn => btn.addEventListener('click', () => {
+      gradBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      window.selGrad = {
+        type: btn.dataset.type,
+        c1: document.getElementById('colorGrad1').value,
+        c2: document.getElementById('colorGrad2').value,
+        angle: btn.dataset.angle
+      };
+    }));
+
+    // Pattern Scale & Previews
+    const patternScale = document.getElementById('patternScale');
+    const scaleValue = document.getElementById('scaleValue');
+    const patBtns = document.querySelectorAll('.pattern-button');
+    function updatePatternPreviews() {
+      patBtns.forEach(btn => {
+        const pattern = btn.dataset.pattern;
+        let bg = '';
+        const s = patternScale.value;
+        if (pattern === 'dots') bg = `repeating-radial-gradient(circle, #ccc, #ccc ${s/5}px, #333 ${s/5}px, #333 ${s/2}px)`;
+        else if (pattern === 'stripes') bg = `repeating-linear-gradient(0deg, #ccc, #ccc ${s}px, #333 ${s}px, #333 ${s*2}px)`;
+        else bg = `repeating-linear-gradient(45deg, #ccc, #ccc ${s/5}px, #333 ${s/5}px, #333 ${s/2}px)`;
+        btn.style.background = bg;
+      });
+    }
+    patternScale.addEventListener('input', () => {
+      scaleValue.textContent = patternScale.value;
+      updatePatternPreviews();
     });
-  }
+    patBtns.forEach(btn => btn.addEventListener('click', () => {
+      patBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      window.selPattern = btn.dataset.pattern;
+    }));
+    updatePatternPreviews();
 
-  colorThemeBtn.addEventListener('click', () => {
-    currentThemeIndex = (currentThemeIndex + 1) % themeOrder.length;
-    const themeName = themeOrder[currentThemeIndex];
-    renderSwatches(themes[themeName]);
-    colorThemeBtn.textContent = `« ${themeName[0].toUpperCase() + themeName.slice(1)} »`;
-  });
+    // Zoom Controls
+    document.getElementById('zoomIn').addEventListener('click', () => {
+      zoomScale *= 1.2;
+      document.getElementById('svgContainer').style.transform = `scale(${zoomScale})`;
+    });
+    document.getElementById('zoomOut').addEventListener('click', () => {
+      zoomScale /= 1.2;
+      document.getElementById('svgContainer').style.transform = `scale(${zoomScale})`;
+    });
+    document.getElementById('resetZoom').addEventListener('click', () => {
+      zoomScale = 1;
+      document.getElementById('svgContainer').style.transform = `scale(${zoomScale})`;
+    });
 
-  renderSwatches(themes.base);
-
-  // Apply fill on shape click
-  const shapes = document.querySelectorAll('#svgDrawing path, #svgDrawing rect, #svgDrawing circle, #svgDrawing polygon');
-  shapes.forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', () => {
-      if (selectedFill.startsWith("gradient_") || selectedFill.startsWith("pattern_")) {
-        el.setAttribute("fill", `url(#${selectedFill})`);
-      } else if (selectedFill.startsWith("url(")) {
-        el.setAttribute("fill", selectedFill);
+    // SVG Load & Fill
+    document.getElementById('svgFile').addEventListener('change', e => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        document.getElementById('svgContainer').innerHTML = ev.target.result;
+        svgDoc = document.querySelector('#svgContainer svg');
+        setupFillOnClick(); ensureDefs();
+      };
+      reader.readAsText(file);
+    });
+    function setupFillOnClick() {
+      svgDoc.querySelectorAll('path, rect, circle, ellipse, polygon, polyline').forEach(el => {
+        el.classList.add('hovered'); el.addEventListener('click', evt => { evt.stopPropagation(); applyFill(el); });
+      });
+      svgDoc.addEventListener('click', evt => evt.stopPropagation());
+    }
+    function applyFill(el) {
+      ensureDefs();
+      if (currentMode === 'solid') el.setAttribute('fill', document.getElementById('colorSolid').value);
+      else if (currentMode === 'gradient') {
+        const id = `grad-${gradCounter++}`;
+        const g = document.createElementNS('http://www.w3.org/2000/svg', window.selGrad.type === 'radial' ? 'radialGradient' : 'linearGradient');
+        g.setAttribute('id', id);
+        [[0, window.selGrad.c1], [100, window.selGrad.c2]].forEach(([off, col]) => {
+          const stop = document.createElementNS('http://www.w3.org/2000/svg','stop'); stop.setAttribute('offset', `${off}%`); stop.setAttribute('stop-color', col); g.appendChild(stop);
+        });
+        if (window.selGrad.type === 'linear') {
+          const a = parseFloat(window.selGrad.angle)*Math.PI/180;
+          g.setAttribute('x1', `${50 - Math.cos(a)*50}%`); g.setAttribute('y1', `${50 - Math.sin(a)*50}%`);
+          g.setAttribute('x2', `${50 + Math.cos(a)*50}%`); g.setAttribute('y2', `${50 + Math.sin(a)*50}%`);
+        }
+        svgDoc.querySelector('defs').appendChild(g); el.setAttribute('fill', `url(#${id})`);
       } else {
-        el.setAttribute("fill", selectedFill);
+        const id = `pat-${Date.now()}`;
+        const p = document.createElementNS('http://www.w3.org/2000/svg','pattern'); p.setAttribute('id', id);
+        p.setAttribute('patternUnits', 'userSpaceOnUse'); p.setAttribute('width', patternScale.value); p.setAttribute('height', patternScale.value);
+        const bg = document.createElementNS('http://www.w3.org/2000/svg','rect'); bg.setAttribute('width', patternScale.value); bg.setAttribute('height', patternScale.value); bg.setAttribute('fill', '#eee'); p.appendChild(bg);
+        if (window.selPattern === 'dots') { const dot = document.createElementNS('http://www.w3.org/2000/svg','circle'); dot.setAttribute('cx', patternScale.value/2); dot.setAttribute('cy', patternScale.value/2); dot.setAttribute('r', patternScale.value/6); dot.setAttribute('fill', '#333'); p.appendChild(dot); }
+        else if (window.selPattern === 'stripes') { const stripe = document.createElementNS('http://www.w3.org/2000/svg','rect'); stripe.setAttribute('width', patternScale.value/2); stripe.setAttribute('height', patternScale.value); stripe.setAttribute('fill', '#333'); p.appendChild(stripe); }
+        else { const pathEl = document.createElementNS('http://www.w3.org/2000/svg','path'); pathEl.setAttribute('d', `M0,${patternScale.value} L${patternScale.value},0`); pathEl.setAttribute('stroke', '#333'); pathEl.setAttribute('stroke-width', patternScale.value/20); p.appendChild(pathEl); }
+        svgDoc.querySelector('defs').appendChild(p); el.setAttribute('fill', `url(#${id})`);
       }
-    });
-  });
-
-  // Clear button resets fills
-  document.getElementById('clearBtn').onclick = () => {
-    shapes.forEach(el => el.removeAttribute("fill"));
-  };
-
-  // When a gradient or pattern fill is clicked in the fill samples
-  document.querySelectorAll('.patternSample').forEach(sample => {
-    sample.addEventListener('click', () => {
-      const fill = sample.getAttribute('data-fill');
-      selectedFill = fill;
-
-    if (fill.startsWith("gradient_")) {
-      const grad = document.getElementById(fill);
-      if (grad) {
-        const stops = grad.querySelectorAll('stop');
-        if (stops.length >= 2) {
-          selectedColor1 = stops[0].getAttribute('stop-color');
-          selectedColor2 = stops[1].getAttribute('stop-color');
-          pickr1.setColor(selectedColor1);
-          pickr2.setColor(selectedColor2);
-        }
-      }
-    } else if (fill.startsWith("pattern_")) {
-      const pattern = document.getElementById(fill);
-      if (pattern) {
-        const rect = pattern.querySelector('rect');
-        const circle = pattern.querySelector('circle');
-        if (rect && circle) {
-          selectedColor1 = circle.getAttribute('fill');
-          selectedColor2 = rect.getAttribute('fill');
-          pickr1.setColor(selectedColor1);
-          pickr2.setColor(selectedColor2);
-        }
-      }
-    } else {
-      selectedColor1 = fill;
-      pickr1.setColor(selectedColor1);
     }
-
-
-      updateFillPreview(fill);
-    });
-  });
-};
-
-function updatePatternColors(id, color1, color2) {
-  const pattern = document.getElementById(id);
-  if (!pattern) return;
-
-  const children = pattern.children;
-
-  // Assumes background is rect and dots are circle
-  for (const el of children) {
-    if (el.tagName === 'rect') {
-      el.setAttribute('fill', color2); // background
-    } else if (el.tagName === 'circle') {
-      el.setAttribute('fill', color1); // dots
-    }
-  }
+    function ensureDefs() { if (!svgDoc) return; let defs = svgDoc.querySelector('defs'); if (!defs) { defs = document.createElementNS('http://www.w3.org/2000/svg','defs'); svgDoc.prepend(defs);} }
 }

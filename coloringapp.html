@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Coloring App with Pickr (Option 2)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Coloring App</title>
   <link rel="stylesheet" href="assets/coloring.css" />
 </head>
 <body>
-
-<h2>🎨 Coloring Book</h2>
-
- <div id="sidebar">
+  <div id="sidebar">
     <h2>Coloring Controls</h2>
-    <!-- Load & Mode -->
     <div class="control-group">
       <label>Load SVG:</label>
       <input type="file" id="svgFile" accept=".svg">
@@ -30,49 +27,47 @@
         </div>
       </div>
     </div>
-    <!-- Palette -->
+
+    <div id="solidControls" class="control-group">
     <div id="paletteGroup" class="control-group">
       <label>Select Palette:</label>
       <div class="palette-buttons">
         <div class="palette-button" data-palette="base">Base</div>
-        <div class="palette-button" data-palette="grayscale">Grayscale</div>
+        <div class="palette-button" data-palette="pastels">Pastels</div>
         <div class="palette-button" data-palette="brights">Brights</div>
       </div>
       <div id="swatchContainer" class="swatch-container"></div>
-    </div>
-    <!-- Solid Controls -->
-    <div id="solidControls" class="control-group">
+    </div>    
       <label>Solid Color:</label>
       <input type="color" id="colorSolid" value="#ff0000">
     </div>
-    <!-- Gradient Controls -->
     <div id="gradientControls" class="control-group" style="display:none;">
       <label>Gradient Colors:</label><br>
-      <input type="color" id="colorGrad1" value="#f44336">
+      <input type="color" id="colorGrad1" value="#ffffff">
       <input type="color" id="colorGrad2" value="#e91e63">
       <div class="gradient-buttons">
         <div class="gradient-button" data-type="linear" data-angle="0"></div>
+        <div class="gradient-button" data-type="linear" data-angle="180"></div>
         <div class="gradient-button" data-type="linear" data-angle="90"></div>
         <div class="gradient-button" data-type="linear" data-angle="-90"></div>
         <div class="gradient-button" data-type="linear" data-angle="45"></div>
         <div class="gradient-button" data-type="linear" data-angle="-45"></div>
+        <div class="gradient-button" data-type="linear" data-angle="30"></div>
+        <div class="gradient-button" data-type="linear" data-angle="-30"></div>
         <div class="gradient-button" data-type="radial"></div>
       </div>
     </div>
-    <!-- Pattern Controls -->
     <div id="patternControls" class="control-group" style="display:none;">
-      <label>Pattern Type & Scale:</label>
-      <div class="pattern-buttons">
-        <div class="pattern-button" data-pattern="dots"></div>
-        <div class="pattern-button" data-pattern="stripes"></div>
-        <div class="pattern-button" data-pattern="diagonal"></div>
-      </div>
-      <label class="range-label">Pattern Scale: <span id="scaleValue">20</span>px</label>
-      <input type="range" id="patternScale" min="5" max="200" value="20">
+      <label>Pattern Colors:</label><br>
+      <input type="color" id="patternColor1" value="#eeeeee" title="Background Color">
+      <input type="color" id="patternColor2" value="#333333" title="Foreground Color">
+      <label class="range-label">Pattern Scale: <span id="scaleValue">40</span>px</label>
+      <input type="range" id="patternScale" min="5" max="200" value="40"><br>
+      <label>Pattern Type:</label>
+      <div class="pattern-buttons" id="patternButtons"></div>
     </div>
     <p>Click a region in the SVG to apply the selected fill.</p>
   </div>
-  <!-- Viewer -->
   <div id="viewer">
     <div id="zoomControls">
       <button id="zoomIn">+</button>

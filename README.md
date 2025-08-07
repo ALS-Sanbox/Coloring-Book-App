@@ -2,8 +2,22 @@ This is a basic coloring app that will load a svg and allow coloing it with soli
 
 The basic swatch themes are Base, Pastels, Brights.
 
-Work in progress
-1. Fills along with fills preview WIP: can fill the image with the pattern still working on getting color change working - complete
-2. A menu to allow for saving and loading images
-3. moving the SVG around the canvas and zooming in and out - WIP can zoom in/out and reset zoom
+This will work with just including two files the js app and the css.
 
+Instructions:
+
+1. Include in the header 
+   a. svg-coloring-widget.css
+   b.svg-coloring-widget.js
+   
+3. In the body 
+  In the body add and empty div with an unique id then in the init script use that id and set basic size options.
+  ex.
+      <div id="myColoringApp"></div>
+      <script>
+        SVGColoringWidget.init('#myColoringApp', {
+          width: '100%',
+          height: '600px',
+          sidebarWidth: '300px'
+        });
+    </script>

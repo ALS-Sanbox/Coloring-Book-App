@@ -20,7 +20,7 @@ This is a basic coloring app that allows you to load an SVG and color it using s
 <script src="svg-coloring-widget.js"></script>
 ```
 
-2. Add a Container in the <body>
+2. Add a Container in the `<body>`
 Add an empty div with a unique id to your HTML body:
 ```
 <div id="myColoringApp"></div>

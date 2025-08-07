@@ -1,0 +1,263 @@
+  <style id="svg-coloring-widget-css">
+    .svg-coloring-widget {
+      font-family: Arial, sans-serif;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+      box-sizing: border-box;
+    }
+    
+    .svg-coloring-widget * {
+      box-sizing: border-box;
+    }
+    
+    .svg-coloring-widget input[type="color"] {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .svg-coloring-widget .sidebar {
+      width: 300px;
+	  height: inherit;
+      padding: 20px;
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+    
+    .svg-coloring-widget .viewer {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: white;
+    }
+    
+    .svg-coloring-widget .svg-container {
+      width: 100%;
+      height: 100%;
+      transform-origin: center center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .svg-coloring-widget .mode-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .svg-coloring-widget .mode-button {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      background: white;
+      transition: all 0.2s;
+    }
+    
+    .svg-coloring-widget .mode-button:hover {
+      border-color: #999;
+    }
+    
+    .svg-coloring-widget .mode-button.selected {
+      border-color: #2196f3;
+      background: #e3f2fd;
+    }
+    
+    .svg-coloring-widget .control-group {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .svg-coloring-widget .control-group:last-child {
+      border-bottom: none;
+    }
+    
+    .svg-coloring-widget .control-group label {
+      display: flex;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    
+    .svg-coloring-widget .hovered {
+      opacity: 0.7;
+      cursor: pointer;
+    }
+    
+    .svg-coloring-widget .zoom-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+    
+    .svg-coloring-widget .zoom-controls button {
+      width: 32px;
+      height: 32px;
+      margin: 0 2px;
+      border: 1px solid #ccc;
+      background: white;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+    
+    .svg-coloring-widget .zoom-controls button:hover {
+      background: #f0f0f0;
+      border-color: #999;
+    }
+    
+    .svg-coloring-widget .palette-buttons {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    
+    .svg-coloring-widget .palette-button {
+      flex: 1;
+      height: 32px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 4px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .svg-coloring-widget .palette-button:hover {
+      border-color: #999;
+    }
+    
+    .svg-coloring-widget .palette-button.selected {
+      border-color: #2196f3;
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+    
+    .svg-coloring-widget .swatch-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    
+    .svg-coloring-widget .swatch {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    
+    .svg-coloring-widget .swatch:hover {
+      border-color: #999;
+      transform: scale(1.1);
+    }
+    
+    .svg-coloring-widget .swatch.selected {
+      border-color: #2196f3;
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3);
+    }
+    
+    .svg-coloring-widget .range-label {
+      margin-top: 10px;
+      display: flex;
+      font-size: 14px;
+    }
+    
+    .svg-coloring-widget input[type="range"] {
+      width: 100%;
+      margin-top: 5px;
+    }
+    
+    .svg-coloring-widget input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: white;
+    }
+    
+    .svg-coloring-widget .gradient-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    
+    .svg-coloring-widget .gradient-button {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    
+    .svg-coloring-widget .gradient-button:hover {
+      border-color: #999;
+    }
+    
+    .svg-coloring-widget .gradient-button.selected {
+      border-color: #2196f3;
+      box-shadow: 0 0 0 1px rgba(33, 150, 243, 0.3);
+    }
+    
+    .svg-coloring-widget .pattern-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      max-height: 240px;
+      overflow-y: auto;
+      padding-right: 5px;
+      margin-bottom: 10px;
+    }
+    
+    .svg-coloring-widget .pattern-button {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      border: 2px solid #ccc;
+      padding: 0;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    
+    .svg-coloring-widget .pattern-button:hover {
+      border-color: #999;
+    }
+    
+    .svg-coloring-widget .pattern-button.selected {
+      border-color: #2196f3;
+      box-shadow: 0 0 0 1px rgba(33, 150, 243, 0.3);
+    }
+    
+    .svg-coloring-widget .info-text {
+      font-size: 13px;
+      color: #666;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }

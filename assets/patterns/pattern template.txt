@@ -1,7 +1,0 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="701" height="700" viewBox="610,105.5,701,700">
-<g id="document" fill="currentColor1" fill-rule="nonzero" ><rect x="610" y="75.35714" transform="scale(1,1.4)" width="700" height="500" id="Shape 1 1" vector-effect="non-scaling-stroke" fill="currentColor1" />
-</g>
-<!-- Start look for fill="#8c8c8c" and change to fill="currentColor2"-->
-
-<!-- End -->
-</svg>

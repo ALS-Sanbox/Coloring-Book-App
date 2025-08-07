@@ -1,9 +1,39 @@
-This is a basic coloring app that will load a svg and allow coloing it with solid, graidents, and patterns.
+# SVG Coloring Widget
 
-The basic swatch themes are Base, Pastels, Brights.
+This is a basic coloring app that allows you to load an SVG and color it using solid colors, gradients, and patterns.
 
-Work in progress
-1. Fills along with fills preview WIP: can fill the image with the pattern still working on getting color change working - complete
-2. A menu to allow for saving and loading images
-3. moving the SVG around the canvas and zooming in and out - WIP can zoom in/out and reset zoom
+## Features
 
+- Supports solid colors, gradients, and pattern fills
+- Includes basic swatch themes:
+  - **Base**
+  - **Pastels**
+  - **Brights**
+- Lightweight: works by including just **two files** (JS and CSS)
+
+## Getting Started
+
+### 1. Include in the `<head>`
+
+```
+<link rel="stylesheet" href="svg-coloring-widget.css">
+<script src="svg-coloring-widget.js"></script>
+```
+
+### 2. Add a Container in the `<body>`
+Add an empty div with a unique id to your HTML body:
+```
+<div id="myColoringApp"></div>
+```
+
+### 3. Initialize the Widget
+Use the widget's init method with your container's ID and configuration options:
+```
+<script>
+  SVGColoringWidget.init('#myColoringApp', {
+    width: '100%',
+    height: '600px',
+    sidebarWidth: '300px'
+  });
+</script>
+```

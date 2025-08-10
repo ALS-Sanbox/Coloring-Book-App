@@ -1,6 +1,6 @@
 # SVG Coloring Widget
 
-This is a basic coloring app that allows you to load an SVG and color it using solid colors, gradients, and patterns.
+This is a basic coloring app that allows you to load an SVG and color it using solid colors, gradients, and patterns with the ability to pan and zoom the svg.
 
 ## Features
 

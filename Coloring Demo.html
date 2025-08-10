@@ -8,14 +8,50 @@
   <script src="svg-coloring-widget.js"></script>
 </head>
 <body>
-<div id="myColoringApp"></div>
 
-<script>
-  SVGColoringWidget.init('#myColoringApp', {
-    width: '100%',
-    height: '600px',
-    sidebarWidth: '300px'
-  });
-</script>
+<div type="button" id="isk42">Uncle Poopy</div>
+<div type="button" id="ix17z">image01</div>
+<div type="button" id="ikqkp">image02</div>
+<div id="myColoringApp" class="gjs-cell"></div>
+
+	<script>
+	  let myApp;
+
+	  document.addEventListener('DOMContentLoaded', function () {
+		// Initialize coloring app manually and store reference
+		myApp = SVGColoringWidget.init('#myColoringApp', {
+		  height: '100%',
+		  sidebarWidth: '300px'
+		});
+
+		// Helper function to fetch and load SVG
+		function loadSVGFromURL(url) {
+		  fetch(url)
+			.then(response => {
+			  if (!response.ok) throw new Error('SVG load failed');
+			  return response.text();
+			})
+			.then(svgContent => {
+			  myApp.loadSVG(svgContent);
+			})
+			.catch(err => {
+			  console.error('Error loading SVG:', err);
+			});
+		}
+
+		// Load specific SVGs on button click
+		document.getElementById('isk42').addEventListener('click', () => {
+		  loadSVGFromURL('/assets/images/test00.svg'); // replace with actual path
+		});
+
+		document.getElementById('ix17z').addEventListener('click', () => {
+		  loadSVGFromURL('/assets/images/test01.svg'); // replace with actual path
+		});
+		
+		document.getElementById('ikqkp').addEventListener('click', () => {
+		  loadSVGFromURL('/assets/images/test02.svg'); // replace with actual path
+		});		
+	  });
+	</script>
 </body>
 </html>

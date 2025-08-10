@@ -117,6 +117,7 @@ window.SVGColoringWidget = (function() {
 					<button class="zoom-in" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
 					<button class="zoom-out" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
 					<button class="reset-zoom" title="Reset Zoom"><i class="fa-solid fa-house"></i></button>
+					<button class="fullscreen-toggle" title="Full Screen"><i class="fa-solid fa-expand"></i></button>
 				</div>
 				<label>Pan Controls:</label>
 				<div class="pan-controls">
@@ -215,7 +216,8 @@ window.SVGColoringWidget = (function() {
       widget.querySelector('.zoom-in').addEventListener('click', () => this.zoomIn());
       widget.querySelector('.zoom-out').addEventListener('click', () => this.zoomOut());
       widget.querySelector('.reset-zoom').addEventListener('click', () => this.resetZoom());
-      
+      widget.querySelector('.fullscreen-toggle').addEventListener('click', () => this.fullscreen());
+	  
       // Pan controls
       widget.querySelector('.pan-up').addEventListener('click', () => this.panUp());
       widget.querySelector('.pan-down').addEventListener('click', () => this.panDown());
@@ -550,6 +552,36 @@ window.SVGColoringWidget = (function() {
       this.panX = 0;
       this.panY = 0;
       this.updateTransform();
+    }
+	
+    fullscreen() {
+      const widget = this.container.querySelector('.svg-coloring-widget');
+      
+      if (!document.fullscreenElement) {
+        // Try to enter fullscreen mode
+        if (widget.requestFullscreen) {
+          widget.requestFullscreen().catch(err => {
+            console.error(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else if (widget.webkitRequestFullscreen) {
+          widget.webkitRequestFullscreen();
+        } else if (widget.msRequestFullscreen) {
+          widget.msRequestFullscreen();
+        } else if (widget.mozRequestFullScreen) {
+          widget.mozRequestFullScreen();
+        }
+      } else {
+        // Exit fullscreen mode
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        }
+      }
     }
     
     panUp() {

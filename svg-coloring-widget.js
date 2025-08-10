@@ -14,6 +14,8 @@ window.SVGColoringWidget = (function() {
       this.currentMode = 'solid';
       this.svgDoc = null;
       this.zoomLevel = 1;
+      this.panX = 0;
+      this.panY = 0;
       this.gradientType = 'linear';
       this.gradientAngle = 0;
       this.patternCache = {};
@@ -25,7 +27,7 @@ window.SVGColoringWidget = (function() {
         brights: ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4','#46f0f0','#f032e6','#bcf60c','#fabebe','#008080','#e6beff','#9a6324','#fffac8','#800000','#aaffc3']
       };
       
-      this.demoPatterns = {
+	this.demoPatterns = {
         'dots': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
           <rect width="20" height="20" fill="currentColor1"/>
           <circle cx="10" cy="10" r="3" fill="currentColor2"/>
@@ -46,7 +48,50 @@ window.SVGColoringWidget = (function() {
         'triangles': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
           <rect width="20" height="20" fill="currentColor1"/>
           <polygon points="10,2 18,18 2,18" fill="currentColor2"/>
-        </svg>`
+        </svg>`,
+        'pattern00': `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="701.5" height="707" viewBox="608.5,110.5,701.5,707"><g id="document" fill="currentColor1" fill-rule="nonzero" stroke="#000000" stroke-width="0" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><rect x="610" y="79.64286" transform="scale(1,1.4)" width="700" height="500" id="Shape 1 1" vector-effect="non-scaling-stroke"/></g><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g id="stage"><g id="layer1 1"><path d="M610,112l697,705l-347,-3l6,-703z" id="Path 1" fill="currentColor2" stroke="currentColor2"/><path d="M965.99154,111.99139" id="Path 1" fill="none" stroke="#000000"/><path d="M966,112l343,344v-345z" id="Path 1" fill="currentColor2" stroke="#000000"/><path d="M960.0256,811.00022l-350.0256,-425.00022l-1,424z" id="Path 1" fill="currentColor2" stroke="currentColor2"/></g></g></g></svg>`,
+		'pattern01': `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="701" height="700" viewBox="610,105.5,701,700">
+			<g id="document" fill="currentColor1" fill-rule="nonzero" ><rect x="610" y="75.35714" transform="scale(1,1.4)" width="700" height="500" id="Shape 1 1" vector-effect="non-scaling-stroke" fill="currentColor1" />
+			</g>
+			<!-- Start look for fill="#8c8c8c" and change to fill="currentColor2"-->
+			<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="none" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+			<g id="stage">
+			<g id="layer1 1">
+			<path d="M931,241" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M543.35363,750.45148" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M1237.70605,244.71895" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M619.18521,809.69861" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M618.79559,713.5363" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M1230.80407,115.63317" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M1231.59607,110.93577" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M1310.83255,196.31714l-1.18686,-84.33446" id="Path 1" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<g id="Group 1" fill="currentColor2">
+			<path d="M968.77196,266.07648l-54.99726,120.19577l-129.00274,1.80423l86.77778,91.22222l-31.22222,149.77778l124.9645,-85.95077l129.47994,92.95077l-35,-144l99,-102l-123.47859,4.15113z" id="Path 4" stroke="#8c8c8c" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M682.56067,111.35243l-72.54649,0.03604l-0.73516,84.85559l39.46018,-26.11836l115.0355,82.95077l-33.95709,-140.92861l-47.25694,-0.79543" id="Path 2 1" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter"/>
+			<path d="M1309.89609,111.98604l-78.30002,-1.05027c-12.59092,77.57035 -17.49544,106.65924 -26.15744,155.14071l105.50432,-69.83241" id="Path 3 1" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter"/>
+			<path d="M1310.94295,704.54246l-129.00274,1.80423l79,89l-2.84256,16.85929l52.51552,-0.35988z" id="Path 4" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+			<path d="M608.79811,706.55443l1.59748,104.98187l144.57421,0.66968l98.80217,-101.79617l-123.47859,4.15113l-66.52141,-128.15113l-54.99726,120.19577" id="Path 1 1" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter"/>
+			</g>
+			</g>
+			</g>
+			</g>
+			<!-- End -->
+			</svg>`,
+		'pattern03': `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="701" height="700" viewBox="610,105.5,701,700">
+			<g id="document" fill="currentColor1" fill-rule="nonzero" ><rect x="610" y="75.35714" transform="scale(1,1.4)" width="700" height="500" id="Shape 1 1" vector-effect="non-scaling-stroke" fill="currentColor1" />
+			</g>
+			<!-- Start look for fill="#8c8c8c" and change to fill="currentColor2"-->
+			<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+			<g id="stage">
+			<g id="layer1 1"><path d="M610,811.9854l342,-409.9854l360.07137,411.93761z" id="Path 1" fill="currentColor2" stroke="#8c8c8c"/>
+			<path d="M958.95479,409.91806" id="Path 1" fill="none" stroke="#000000"/>
+			<path d="M611,195l341.93133,208.06032l-342.93133,-0.06032z" id="Path 1" fill="currentColor2" stroke="#000000"/>
+			<path d="M1311,208" id="Path 1" fill="none" stroke="#000000"/><path d="M1311.95003,195l-359.0187,208.06032l360.06867,-0.06032z" id="Path 1" fill="currentColor2" stroke="#000000"/>
+			</g>
+			</g>
+			</g>
+			<!-- End -->
+			</svg>`,
       };
       
       this.init();
@@ -66,10 +111,22 @@ window.SVGColoringWidget = (function() {
           <div class="sidebar" style="width: ${this.options.sidebarWidth};">
             <h3 style="margin-top: 0; color: #333;">Coloring Controls</h3>
             
-            <div class="control-group">
-              <label>Load SVG:</label>
-              <input type="file" class="svg-file-input" accept=".svg">
-            </div>
+			<div class="control-group">
+				<label>Zoom Controls</label>
+				<div class="zoom-controls">
+					<button class="zoom-in" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+					<button class="zoom-out" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+					<button class="reset-zoom" title="Reset Zoom"><i class="fa-solid fa-house"></i></button>
+				</div>
+				<label>Pan Controls:</label>
+				<div class="pan-controls">
+					<button class="pan-up" title="Pan Up"><i class="fa-solid fa-arrow-up"></i></button>
+					<button class="pan-left" title="Pan Left"><i class="fa-solid fa-arrow-left"></i></button>			  
+					<button class="pan-right" title="Pan Right"><i class="fa-solid fa-arrow-right"></i></button>
+					<button class="pan-down" title="Pan Down"><i class="fa-solid fa-arrow-down-long"></i></button>
+					<button class="pan-center" title="Center Image"><i class="fa-solid fa-arrows-to-circle"></i></button>
+				</div>
+			</div>
             
             <div class="control-group">
               <label>Fill Mode:</label>
@@ -139,11 +196,6 @@ window.SVGColoringWidget = (function() {
           </div>
           
           <div class="viewer">
-            <div class="zoom-controls">
-              <button class="zoom-in" title="Zoom In">+</button>
-              <button class="zoom-out" title="Zoom Out">−</button>
-              <button class="reset-zoom" title="Reset Zoom">⌂</button>
-            </div>
             <div class="svg-container"></div>
           </div>
         </div>
@@ -152,10 +204,6 @@ window.SVGColoringWidget = (function() {
     
     bindEvents() {
       const widget = this.container.querySelector('.svg-coloring-widget');
-      
-      // File input
-      const fileInput = widget.querySelector('.svg-file-input');
-      fileInput.addEventListener('change', (e) => this.handleFileLoad(e));
       
       // Mode buttons
       const modeButtons = widget.querySelectorAll('.mode-button');
@@ -167,6 +215,13 @@ window.SVGColoringWidget = (function() {
       widget.querySelector('.zoom-in').addEventListener('click', () => this.zoomIn());
       widget.querySelector('.zoom-out').addEventListener('click', () => this.zoomOut());
       widget.querySelector('.reset-zoom').addEventListener('click', () => this.resetZoom());
+      
+      // Pan controls
+      widget.querySelector('.pan-up').addEventListener('click', () => this.panUp());
+      widget.querySelector('.pan-down').addEventListener('click', () => this.panDown());
+      widget.querySelector('.pan-right').addEventListener('click', () => this.panLeft());
+      widget.querySelector('.pan-left').addEventListener('click', () => this.panRight());
+      widget.querySelector('.pan-center').addEventListener('click', () => this.centerPan());
       
       // Gradient controls
       widget.querySelector('.color-grad1').addEventListener('input', () => this.updateGradientButtons());
@@ -482,22 +537,50 @@ window.SVGColoringWidget = (function() {
     
     zoomIn() {
       this.zoomLevel *= 1.2;
-      this.updateZoom();
+      this.updateTransform();
     }
     
     zoomOut() {
       this.zoomLevel /= 1.2;
-      this.updateZoom();
+      this.updateTransform();
     }
     
     resetZoom() {
       this.zoomLevel = 1;
-      this.updateZoom();
+      this.panX = 0;
+      this.panY = 0;
+      this.updateTransform();
     }
     
-    updateZoom() {
+    panUp() {
+      this.panY += 50;
+      this.updateTransform();
+    }
+    
+    panDown() {
+      this.panY -= 50;
+      this.updateTransform();
+    }
+    
+    panLeft() {
+      this.panX += 50;
+      this.updateTransform();
+    }
+    
+    panRight() {
+      this.panX -= 50;
+      this.updateTransform();
+    }
+    
+    centerPan() {
+      this.panX = 0;
+      this.panY = 0;
+      this.updateTransform();
+    }
+    
+    updateTransform() {
       const container = this.container.querySelector('.svg-container');
-      container.style.transform = `scale(${this.zoomLevel})`;
+      container.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoomLevel})`;
     }
     
     // Public API methods

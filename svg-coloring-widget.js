@@ -192,7 +192,7 @@ window.SVGColoringWidget = (function() {
             </div>
             
             <div class="info-text">
-              Click any region in the SVG to apply the selected fill.
+              Click any region in the SVG to apply the selected fill. <br> To reset the image just re-click on the image button.
             </div>
           </div>
           
@@ -615,18 +615,27 @@ window.SVGColoringWidget = (function() {
       container.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoomLevel})`;
     }
     
-    // Public API methods
-    loadSVG(svgContent) {
-      const svgContainer = this.container.querySelector('.svg-container');
-      svgContainer.innerHTML = svgContent;
-      this.svgDoc = svgContainer.querySelector('svg');
-      if (this.svgDoc) {
-        this.svgDoc.addEventListener('click', (e) => this.onSvgClick(e));
-        this.svgDoc.style.maxWidth = '100%';
-        this.svgDoc.style.maxHeight = '100%';
-        this.ensureDefs();
-      }
-    }
+	// Private method
+	#sanitizeSVG(svgText) {
+		return svgText
+		.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+		.replace(/<foreignObject[\s\S]*?>[\s\S]*?<\/foreignObject>/gi, '')
+		.replace(/\son\w+="[^"]*"/gi, '');
+	}
+
+	loadSVG(svgContent) {
+		svgContent = this.#sanitizeSVG(svgContent); // use sanitized version
+		const svgContainer = this.container.querySelector('.svg-container');
+		svgContainer.innerHTML = svgContent;
+		this.svgDoc = svgContainer.querySelector('svg');
+
+		if (this.svgDoc) {
+			this.svgDoc.addEventListener('click', (e) => this.onSvgClick(e));
+			this.svgDoc.style.maxWidth = '100%';
+			this.svgDoc.style.maxHeight = '100%';
+			this.ensureDefs();
+		}
+	}
     
     getSVG() {
       return this.svgDoc ? this.svgDoc.outerHTML : null;

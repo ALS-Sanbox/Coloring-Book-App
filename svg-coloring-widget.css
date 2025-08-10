@@ -95,18 +95,21 @@
       cursor: pointer;
     }
     
-    .svg-coloring-widget .zoom-controls {
-      position: absolute;
-      top: 10px;
+    .svg-coloring-widget .zoom-controls,
+	.svg-coloring-widget .pan-controls {
+      position: flex;
+      top: 60px;
       right: 10px;
-      background: rgba(255, 255, 255, 0.9);
+	  background: rgba(255, 255, 255, 0.9);
       padding: 8px;
       border-radius: 6px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       z-index: 10;
+      gap: 2px;
     }
-    
-    .svg-coloring-widget .zoom-controls button {
+	
+	.svg-coloring-widget .zoom-controls button,
+	.svg-coloring-widget .pan-controls button {
       width: 32px;
       height: 32px;
       margin: 0 2px;
@@ -118,7 +121,8 @@
       transition: all 0.2s;
     }
     
-    .svg-coloring-widget .zoom-controls button:hover {
+	.svg-coloring-widget .zoom-controls button:hover,
+	.svg-coloring-widget .pan-controls button:hover {
       background: #f0f0f0;
       border-color: #999;
     }
